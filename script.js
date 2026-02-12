@@ -10,7 +10,6 @@ let lastEgg = null;
 
 const HEARTS = ["💗","💖","💘","💕","💞","❤️‍🔥","✨"];
 const FIRES  = ["🔥","🔥","🔥","💥","🌶️","✨","💨"];
-
 const BG_COUNT = 40;
 
 function rand(min, max){ return Math.random() * (max - min) + min; }
@@ -23,21 +22,17 @@ function setMode(v){
 function render(v){
   percentEl.textContent = String(v);
 
-  // bar doluluğu
   fill.style.width = `${v}%`;
 
-  // head (ok+avatar) barın ucunda kalsın
-  // 0 ve 100 uçlarında taşmasın diye clamp
+  // ok+avatar uçlarda taşmasın
   const clamped = Math.max(2, Math.min(98, v));
   head.style.left = `${clamped}%`;
 
   setMode(v);
 }
 
-function clearBg(){ bg.innerHTML = ""; }
-
 function spawnBackground(mode){
-  clearBg();
+  bg.innerHTML = "";
   const pool = mode === "hearts" ? HEARTS : FIRES;
 
   for(let i=0;i<BG_COUNT;i++){
@@ -56,12 +51,10 @@ function spawnBackground(mode){
 }
 
 function burst(kind){
-  // kind: "love" | "smoke"
   const pool = kind === "love"
     ? ["💖","💗","💘","💕","✨","💞","💝"]
     : ["💨","🔥","💥","🌶️","💨","🔥"];
 
-  // merkez: barın ucu (head) civarı
   const rect = head.getBoundingClientRect();
   const cx = (rect.left + rect.right) / 2 / window.innerWidth * 100;
   const cy = (rect.top + rect.bottom) / 2 / window.innerHeight * 100;
@@ -75,11 +68,8 @@ function burst(kind){
     el.style.setProperty("--by", cy.toFixed(2));
     el.style.setProperty("--bs", `${rand(18, 36).toFixed(0)}px`);
 
-    // patlama yönleri
-    const dx = `${rand(-140, 140).toFixed(0)}px`;
-    const dy = `${rand(-130, 130).toFixed(0)}px`;
-    el.style.setProperty("--dx", dx);
-    el.style.setProperty("--dy", dy);
+    el.style.setProperty("--dx", `${rand(-140, 140).toFixed(0)}px`);
+    el.style.setProperty("--dy", `${rand(-130, 130).toFixed(0)}px`);
 
     fx.appendChild(el);
     setTimeout(() => el.remove(), 1000);
@@ -90,7 +80,7 @@ function apply(v){
   render(v);
   spawnBackground(v >= 50 ? "hearts" : "fire");
 
-  // Easter egg: sadece eşik değişince bir kere çaksın
+  // Easter egg
   if (v === 100 && lastEgg !== "love"){
     burst("love");
     lastEgg = "love";
@@ -102,13 +92,27 @@ function apply(v){
   }
 }
 
-// Slider input (gizli ama işe yarıyor)
+/* --- jrh.jpg gerçekten yükleniyor mu kontrol --- */
+(function verifyImage(){
+  const img = new Image();
+  img.onload = () => {
+    // ok
+  };
+  img.onerror = () => {
+    // resim yoksa fallback uygula
+    fill.classList.add("noimg");
+    document.querySelector(".avatar")?.classList.add("noimg");
+    console.log("jrh.jpg bulunamadı. Dosya adını/kasayı kontrol et.");
+  };
+  img.src = "./jrh.jpg";
+})();
+
+/* kontroller */
 slider.addEventListener("input", (e) => {
   value = Number(e.target.value);
   apply(value);
 });
 
-// Klavye: ← → (Shift hızlı)
 window.addEventListener("keydown", (e) => {
   const step = e.shiftKey ? 5 : 1;
   if (["ArrowRight","ArrowUp"].includes(e.key)) value = Math.min(100, value + step);
@@ -117,7 +121,7 @@ window.addEventListener("keydown", (e) => {
   apply(value);
 });
 
-// Telefonda/desktop: basılı tutup sürükle
+// basılı sürükle
 let dragging = false;
 let startX = 0;
 let startVal = value;
@@ -127,7 +131,6 @@ window.addEventListener("pointerdown", (e) => {
   startX = e.clientX;
   startVal = value;
 });
-
 window.addEventListener("pointermove", (e) => {
   if(!dragging) return;
   const dx = e.clientX - startX;
@@ -136,9 +139,7 @@ window.addEventListener("pointermove", (e) => {
   slider.value = value;
   apply(value);
 });
-
 window.addEventListener("pointerup", () => dragging = false);
 window.addEventListener("pointercancel", () => dragging = false);
 
-// ilk yükleme
 apply(value);

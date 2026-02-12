@@ -4,7 +4,6 @@
   --text:#F4F7FF;
   --muted:rgba(244,247,255,.72);
   --stroke:rgba(255,255,255,.14);
-  --glass:rgba(255,255,255,.08);
   --shadow: 0 20px 80px rgba(0,0,0,.55);
 }
 
@@ -21,32 +20,29 @@ body{
   overflow:hidden;
 }
 
-#bg{
-  position:fixed;
-  inset:0;
-  pointer-events:none;
-  filter: drop-shadow(0 8px 18px rgba(0,0,0,.35));
-}
-
-#fx{
+/* arkaplan efekt katmanları */
+#bg, #fx{
   position:fixed;
   inset:0;
   pointer-events:none;
 }
+#bg{ filter: drop-shadow(0 8px 18px rgba(0,0,0,.35)); }
 
 .wrap{
-  height:100%;
-  display:grid;
-  place-items:center;
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
   padding:24px;
 }
 
+/* saydam panel */
 .glass{
-  width:min(860px, 94vw);
+  width:min(760px, 94vw);
   padding: 26px 22px 22px;
   border-radius: 28px;
   border: 1px solid var(--stroke);
-  background: rgba(0,0,0,.16);
+  background: rgba(0,0,0,.18);
   backdrop-filter: blur(10px);
   box-shadow: var(--shadow);
   position:relative;
@@ -56,7 +52,7 @@ body{
 .glass::before{
   content:"";
   position:absolute;
-  inset:-30%;
+  inset:-35%;
   background:
     radial-gradient(900px 500px at 20% 20%, rgba(255,255,255,.14), transparent 60%),
     radial-gradient(700px 420px at 85% 80%, rgba(255,255,255,.10), transparent 62%);
@@ -72,10 +68,9 @@ body{
   font-weight: 900;
   letter-spacing: -0.02em;
   text-shadow: 0 12px 34px rgba(0,0,0,.65);
-  margin-bottom: 14px;
+  margin-bottom: 16px;
   z-index:1;
 }
-
 .percentOnly #percent{
   font-size: clamp(64px, 8vw, 104px);
   line-height: 1;
@@ -86,9 +81,10 @@ body{
   opacity:.95;
 }
 
+/* bar */
 .meter{
   position:relative;
-  height: 74px;
+  height: 76px;
   border-radius: 999px;
   z-index:1;
 }
@@ -98,26 +94,31 @@ body{
   inset:0;
   border-radius: 999px;
   border:1px solid rgba(255,255,255,.16);
-  background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
-  backdrop-filter: blur(6px);
+  background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.03));
   overflow:hidden;
 }
 
+/* dolu kısım: jrh.jpg burada görünecek */
 .fill{
   position:absolute;
   left:0; top:0; bottom:0;
   width:72%;
   border-radius: 999px;
-  background-image: url("jrh.jpg");
+  background-image: url("./jrh.jpg");
   background-size: cover;
   background-position: center;
-  filter: saturate(1.05) contrast(1.06);
+  filter: saturate(1.06) contrast(1.06);
   transition: width 420ms cubic-bezier(.2,.9,.2,1);
-  overflow:hidden;
   box-shadow: inset 0 0 0 1px rgba(255,255,255,.12);
 }
 
-/* doluluk sınırında yumuşak parıltı */
+/* resim yoksa en azından boş kalmasın diye fallback görünüm */
+.fill.noimg{
+  background-image: none;
+  background: linear-gradient(90deg, rgba(255,255,255,.14), rgba(255,255,255,.06));
+}
+
+/* doluluk sınırında parıltı */
 .fill::after{
   content:"";
   position:absolute;
@@ -128,6 +129,7 @@ body{
   opacity:.55;
 }
 
+/* ok + avatar (barın ucunda) */
 .head{
   position:absolute;
   top:50%;
@@ -140,7 +142,6 @@ body{
   filter: drop-shadow(0 16px 24px rgba(0,0,0,.45));
 }
 
-/* ok */
 .arrow{
   width: 22px;
   height: 22px;
@@ -152,12 +153,11 @@ body{
   box-shadow: 0 0 0 1px rgba(0,0,0,.12) inset;
 }
 
-/* jrh avatar */
 .avatar{
   width: 54px;
   height: 54px;
   border-radius: 999px;
-  background-image: url("jrh.jpg");
+  background-image: url("./jrh.jpg");
   background-size: cover;
   background-position: center;
   border:1px solid rgba(255,255,255,.35);
@@ -166,21 +166,22 @@ body{
     0 18px 40px rgba(0,0,0,.45);
 }
 
+.avatar.noimg{
+  background-image:none;
+  background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.18), rgba(255,255,255,.06));
+}
+
 /* mod glow */
 .glow{
   position:absolute;
   inset:-40px;
   pointer-events:none;
-  opacity:.0;
-  transition: opacity 260ms ease;
-}
-
-body[data-mode="hearts"] .glow{
   opacity: 1;
+}
+body[data-mode="hearts"] .glow{
   background: radial-gradient(420px 180px at 50% 60%, rgba(255,0,130,.18), transparent 70%);
 }
 body[data-mode="fire"] .glow{
-  opacity: 1;
   background: radial-gradient(420px 180px at 50% 60%, rgba(255,150,0,.16), transparent 70%);
 }
 
@@ -199,7 +200,7 @@ body[data-mode="fire"] .glow{
   left:-9999px; top:-9999px;
 }
 
-/* arkaplan parçacıkları */
+/* bg parçacıkları */
 .p{
   position:absolute;
   left: calc(var(--x) * 1%);
@@ -210,7 +211,6 @@ body[data-mode="fire"] .glow{
   animation: float 3.6s ease-in-out infinite;
   animation-delay: var(--d);
   user-select:none;
-  will-change: transform, opacity;
 }
 @keyframes float{
   0%   { opacity: 0; transform: translate(-50%,-50%) translateY(18px) scale(.85) rotate(var(--r)); }
@@ -219,7 +219,7 @@ body[data-mode="fire"] .glow{
   100% { opacity: 0; transform: translate(-50%,-50%) translateY(-28px) scale(1.08) rotate(calc(var(--r) + 12deg)); }
 }
 
-/* Easter egg burst parçacıkları */
+/* easter egg burst */
 .burst{
   position:absolute;
   left: calc(var(--bx) * 1%);
@@ -237,6 +237,6 @@ body[data-mode="fire"] .glow{
 }
 
 @media (max-width:520px){
-  .meter{ height: 66px; }
+  .meter{ height: 68px; }
   .avatar{ width: 50px; height: 50px; }
 }

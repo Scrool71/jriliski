@@ -152,4 +152,21 @@ window.addEventListener("pointerup", () => dragging = false);
 window.addEventListener("pointercancel", () => dragging = false);
 
 apply(value);
+const createBtn = document.getElementById("createLink");
+const copyBtn = document.getElementById("copyLink");
+const shareInput = document.getElementById("shareLink");
+
+createBtn.addEventListener("click", () => {
+  const base = window.location.origin + window.location.pathname;
+  const link = `${base}?p=${value}`;
+  shareInput.value = link;
+});
+
+copyBtn.addEventListener("click", () => {
+  if (!shareInput.value) return;
+  navigator.clipboard.writeText(shareInput.value);
+  copyBtn.textContent = "Kopyalandı ✔";
+  setTimeout(()=> copyBtn.textContent = "Kopyala", 1500);
+});
+
 

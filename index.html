@@ -8,23 +8,31 @@
 </head>
 <body>
   <div id="bg" aria-hidden="true"></div>
+  <div id="fx" aria-hidden="true"></div>
 
   <main class="wrap">
-    <section class="card">
-      <div class="bar" role="img" aria-label="İlişki durumu yüzdesi">
-        <div class="fill" id="fill"></div>
-
-        <div class="shine"></div>
-
-        <div class="pct">
-          <span id="percent">72</span><span class="sym">%</span>
-        </div>
+    <section class="glass">
+      <div class="percentOnly" aria-label="İlişki durumu">
+        <span id="percent">72</span><span class="sym">%</span>
       </div>
 
-      <div class="status" id="status">Kalp modu 💗</div>
+      <div class="meter" role="img" aria-label="Yüzde barı">
+        <div class="track"></div>
+        <div class="fill" id="fill"></div>
+
+        <!-- ok + avatar (barın ucunda) -->
+        <div class="head" id="head">
+          <div class="arrow" aria-hidden="true"></div>
+          <div class="avatar" aria-hidden="true"></div>
+        </div>
+
+        <div class="glow" aria-hidden="true"></div>
+      </div>
+
+      <div class="tiny" id="tiny">💗 %50 üstü: kalp / 🔥 %50 altı: ateş</div>
     </section>
 
-    <!-- görünmez kontrol: klavye / basılı sürükle ile değişiyor -->
+    <!-- Kontrol gizli: klavye oklarıyla (← →) veya ekranda basılı sürükle -->
     <input id="slider" type="range" min="0" max="100" value="72" />
   </main>
 

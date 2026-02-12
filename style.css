@@ -5,7 +5,7 @@
   --muted:rgba(244,247,255,.72);
   --stroke:rgba(255,255,255,.14);
   --glass:rgba(255,255,255,.08);
-  --shadow: 0 18px 70px rgba(0,0,0,.48);
+  --shadow: 0 20px 80px rgba(0,0,0,.55);
 }
 
 *{ box-sizing:border-box; }
@@ -28,112 +28,178 @@ body{
   filter: drop-shadow(0 8px 18px rgba(0,0,0,.35));
 }
 
+#fx{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+}
+
 .wrap{
   height:100%;
   display:grid;
   place-items:center;
   padding:24px;
-  position:relative;
 }
 
-.card{
-  width:min(720px, 94vw);
-  padding: 22px 22px 18px;
-  border-radius: 26px;
+.glass{
+  width:min(860px, 94vw);
+  padding: 26px 22px 22px;
+  border-radius: 28px;
   border: 1px solid var(--stroke);
-  background: rgba(0,0,0,.18);
-  backdrop-filter: blur(8px);
+  background: rgba(0,0,0,.16);
+  backdrop-filter: blur(10px);
   box-shadow: var(--shadow);
+  position:relative;
+  overflow:hidden;
 }
 
-/* YATAY BAR */
-.bar{
-  position:relative;
-  height: 140px;
-  border-radius: 22px;
-  overflow:hidden;
-  border:1px solid rgba(255,255,255,.18);
+.glass::before{
+  content:"";
+  position:absolute;
+  inset:-30%;
   background:
-    radial-gradient(700px 260px at 20% 20%, rgba(255,255,255,.10), transparent 60%),
-    linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+    radial-gradient(900px 500px at 20% 20%, rgba(255,255,255,.14), transparent 60%),
+    radial-gradient(700px 420px at 85% 80%, rgba(255,255,255,.10), transparent 62%);
+  opacity:.9;
+  pointer-events:none;
+}
+
+.percentOnly{
+  position:relative;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  text-shadow: 0 12px 34px rgba(0,0,0,.65);
+  margin-bottom: 14px;
+  z-index:1;
+}
+
+.percentOnly #percent{
+  font-size: clamp(64px, 8vw, 104px);
+  line-height: 1;
+}
+.percentOnly .sym{
+  font-size: clamp(28px, 4vw, 44px);
+  margin-left: 6px;
+  opacity:.95;
+}
+
+.meter{
+  position:relative;
+  height: 74px;
+  border-radius: 999px;
+  z-index:1;
+}
+
+.track{
+  position:absolute;
+  inset:0;
+  border-radius: 999px;
+  border:1px solid rgba(255,255,255,.16);
+  background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
+  backdrop-filter: blur(6px);
+  overflow:hidden;
 }
 
 .fill{
   position:absolute;
-  inset:0;
-  width: 72%;
-  max-width: 100%;
+  left:0; top:0; bottom:0;
+  width:72%;
+  border-radius: 999px;
   background-image: url("jrh.jpg");
   background-size: cover;
   background-position: center;
-  filter: saturate(1.05) contrast(1.05);
-  transform: translateZ(0);
+  filter: saturate(1.05) contrast(1.06);
   transition: width 420ms cubic-bezier(.2,.9,.2,1);
+  overflow:hidden;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.12);
 }
 
-/* dolan kısım ile boş kısım arasına yumuşak geçiş */
+/* doluluk sınırında yumuşak parıltı */
 .fill::after{
   content:"";
   position:absolute;
-  top:0; right:-50px;
-  width: 120px; height:100%;
-  background: linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.22), rgba(255,255,255,.0));
+  right:-40px; top:-30px;
+  width:120px; height:140px;
+  background: radial-gradient(circle at 40% 60%, rgba(255,255,255,.30), rgba(255,255,255,0) 70%);
+  transform: rotate(12deg);
   opacity:.55;
-  transform: skewX(-12deg);
-  filter: blur(1px);
 }
 
-/* cam parlama */
-.shine{
+.head{
   position:absolute;
-  inset:0;
-  pointer-events:none;
-  background:
-    radial-gradient(900px 300px at 20% 30%, rgba(255,255,255,.16), transparent 60%),
-    radial-gradient(800px 260px at 80% 70%, rgba(255,255,255,.10), transparent 62%);
-  mix-blend-mode: screen;
-}
-
-.pct{
-  position:absolute;
-  inset:0;
-  display:grid;
-  place-items:center;
-  font-weight: 900;
-  letter-spacing: -0.02em;
-  text-shadow: 0 10px 34px rgba(0,0,0,.6);
-}
-
-.pct #percent{
-  font-size: clamp(64px, 10vw, 96px);
-  line-height:1;
-}
-.pct .sym{
-  font-size: clamp(30px, 5vw, 44px);
-  margin-left: 4px;
-  opacity:.95;
-}
-
-.status{
-  margin-top: 12px;
+  top:50%;
+  left:72%;
+  transform: translate(-50%,-50%);
   display:flex;
-  justify-content:center;
-  font-size: 14px;
-  color: var(--muted);
-  padding: 8px 12px;
+  align-items:center;
+  gap:10px;
+  transition: left 420ms cubic-bezier(.2,.9,.2,1);
+  filter: drop-shadow(0 16px 24px rgba(0,0,0,.45));
+}
+
+/* ok */
+.arrow{
+  width: 22px;
+  height: 22px;
+  transform: rotate(45deg);
+  border-radius: 6px;
+  background: rgba(255,255,255,.18);
+  border:1px solid rgba(255,255,255,.26);
+  backdrop-filter: blur(6px);
+  box-shadow: 0 0 0 1px rgba(0,0,0,.12) inset;
+}
+
+/* jrh avatar */
+.avatar{
+  width: 54px;
+  height: 54px;
   border-radius: 999px;
-  border:1px solid rgba(255,255,255,.12);
-  background: rgba(0,0,0,.22);
+  background-image: url("jrh.jpg");
+  background-size: cover;
+  background-position: center;
+  border:1px solid rgba(255,255,255,.35);
+  box-shadow:
+    0 0 0 6px rgba(255,255,255,.10),
+    0 18px 40px rgba(0,0,0,.45);
 }
 
-/* görünmez slider */
+/* mod glow */
+.glow{
+  position:absolute;
+  inset:-40px;
+  pointer-events:none;
+  opacity:.0;
+  transition: opacity 260ms ease;
+}
+
+body[data-mode="hearts"] .glow{
+  opacity: 1;
+  background: radial-gradient(420px 180px at 50% 60%, rgba(255,0,130,.18), transparent 70%);
+}
+body[data-mode="fire"] .glow{
+  opacity: 1;
+  background: radial-gradient(420px 180px at 50% 60%, rgba(255,150,0,.16), transparent 70%);
+}
+
+.tiny{
+  position:relative;
+  margin-top: 12px;
+  text-align:center;
+  font-size: 13px;
+  color: var(--muted);
+  z-index:1;
+}
+
+/* gizli slider */
 #slider{
-  position: fixed;
-  left:-9999px;
-  top:-9999px;
+  position:fixed;
+  left:-9999px; top:-9999px;
 }
 
-/* parçacıklar */
+/* arkaplan parçacıkları */
 .p{
   position:absolute;
   left: calc(var(--x) * 1%);
@@ -141,28 +207,36 @@ body{
   font-size: var(--s);
   opacity: 0;
   transform: translate(-50%,-50%) scale(.9) rotate(var(--r));
-  animation: float 3.8s ease-in-out infinite;
+  animation: float 3.6s ease-in-out infinite;
   animation-delay: var(--d);
   user-select:none;
   will-change: transform, opacity;
 }
-
 @keyframes float{
   0%   { opacity: 0; transform: translate(-50%,-50%) translateY(18px) scale(.85) rotate(var(--r)); }
   18%  { opacity: .95; }
   55%  { opacity: .85; }
-  100% { opacity: 0; transform: translate(-50%,-50%) translateY(-26px) scale(1.08) rotate(calc(var(--r) + 12deg)); }
+  100% { opacity: 0; transform: translate(-50%,-50%) translateY(-28px) scale(1.08) rotate(calc(var(--r) + 12deg)); }
 }
 
-/* modlara göre glow */
-body[data-mode="hearts"] .bar{
-  box-shadow: 0 0 0 1px rgba(255,0,130,.18), 0 20px 80px rgba(255,0,130,.08);
+/* Easter egg burst parçacıkları */
+.burst{
+  position:absolute;
+  left: calc(var(--bx) * 1%);
+  top: calc(var(--by) * 1%);
+  font-size: var(--bs);
+  transform: translate(-50%,-50%) scale(.9);
+  opacity: 0;
+  animation: burst 900ms ease-out forwards;
+  user-select:none;
 }
-body[data-mode="fire"] .bar{
-  box-shadow: 0 0 0 1px rgba(255,140,0,.16), 0 20px 80px rgba(255,140,0,.08);
+@keyframes burst{
+  0%   { opacity: 0; transform: translate(-50%,-50%) scale(.7); }
+  10%  { opacity: 1; }
+  100% { opacity: 0; transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(1.1); }
 }
 
-/* mobilde daha ince */
 @media (max-width:520px){
-  .bar{ height: 120px; }
+  .meter{ height: 66px; }
+  .avatar{ width: 50px; height: 50px; }
 }

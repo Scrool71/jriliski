@@ -5,7 +5,16 @@ const slider = document.getElementById("slider");
 const fill = document.getElementById("fill");
 const head = document.getElementById("head");
 
-let value = Number(slider.value) || 72;
+// URL'den yüzdeyi al
+function getPercentFromURL(){
+  const params = new URLSearchParams(window.location.search);
+  const p = parseInt(params.get("p"));
+  if (!isNaN(p) && p >= 0 && p <= 100) return p;
+  return null;
+}
+
+const urlPercent = getPercentFromURL();
+let value = urlPercent !== null ? urlPercent : 72;
 let lastEgg = null;
 
 const HEARTS = ["💗","💖","💘","💕","💞","❤️‍🔥","✨"];
@@ -143,3 +152,4 @@ window.addEventListener("pointerup", () => dragging = false);
 window.addEventListener("pointercancel", () => dragging = false);
 
 apply(value);
+

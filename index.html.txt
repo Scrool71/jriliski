@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>İlişki Durumu</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- Arkaplan parçacıkları -->
+  <div id="bg" aria-hidden="true"></div>
+
+  <!-- Ortadaki yüzde kartı -->
+  <main class="center">
+    <section class="meter" role="img" aria-label="İlişki durumu yüzdesi">
+      <div class="photo" aria-hidden="true"></div>
+      <div class="glass"></div>
+
+      <div class="value">
+        <span id="percent">72</span><span class="sym">%</span>
+      </div>
+      <div class="hint" id="hint">Kalp modu 💗</div>
+    </section>
+
+    <!-- Görünmez kontrol (isteğe bağlı) -->
+    <input id="slider" type="range" min="0" max="100" value="72" />
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>

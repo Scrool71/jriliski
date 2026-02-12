@@ -1,0 +1,144 @@
+:root{
+  --bg1:#070A12;
+  --bg2:#0B1024;
+  --text:#F4F7FF;
+  --muted:rgba(244,247,255,.7);
+  --glass:rgba(255,255,255,.08);
+  --stroke:rgba(255,255,255,.16);
+  --shadow: 0 18px 60px rgba(0,0,0,.45);
+}
+
+*{ box-sizing:border-box; }
+html,body{ height:100%; }
+body{
+  margin:0;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Apple Color Emoji","Segoe UI Emoji";
+  color:var(--text);
+  background:
+    radial-gradient(1200px 800px at 30% 20%, rgba(255,0,120,.22), transparent 55%),
+    radial-gradient(1000px 700px at 70% 80%, rgba(0,190,255,.16), transparent 60%),
+    linear-gradient(180deg, var(--bg1), var(--bg2));
+  overflow:hidden;
+}
+
+#bg{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  filter: drop-shadow(0 8px 18px rgba(0,0,0,.35));
+}
+
+/* merkez */
+.center{
+  position:relative;
+  height:100%;
+  display:grid;
+  place-items:center;
+  padding:24px;
+}
+
+/* yüzde kartı */
+.meter{
+  width:min(420px, 92vw);
+  aspect-ratio: 1/1;
+  border-radius: 28px;
+  position:relative;
+  box-shadow: var(--shadow);
+  border:1px solid var(--stroke);
+  overflow:hidden;
+  transform: translateZ(0);
+}
+
+/* foto arkaplanı (yüzde alanında görünecek) */
+.photo{
+  position:absolute;
+  inset:-10%;
+  background-image: url("jrh.jpg");
+  background-size: cover;
+  background-position: center;
+  filter: saturate(1.05) contrast(1.05);
+  transform: scale(1.05);
+}
+
+/* cam efekti */
+.glass{
+  position:absolute;
+  inset:0;
+  background:
+    radial-gradient(800px 500px at 20% 20%, rgba(255,255,255,.14), transparent 60%),
+    radial-gradient(700px 500px at 80% 80%, rgba(255,255,255,.10), transparent 62%),
+    linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+  backdrop-filter: blur(8px);
+}
+
+/* sadece yüzde görünsün */
+.value{
+  position:absolute;
+  inset:0;
+  display:grid;
+  place-items:center;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  text-shadow: 0 8px 28px rgba(0,0,0,.55);
+}
+
+.value #percent{
+  font-size: clamp(84px, 14vw, 132px);
+  line-height: 1;
+}
+
+.value .sym{
+  font-size: clamp(38px, 7vw, 56px);
+  margin-left: 4px;
+  opacity: .95;
+}
+
+/* küçük mod yazısı (istersen kaldır) */
+.hint{
+  position:absolute;
+  left:50%;
+  bottom:14px;
+  transform:translateX(-50%);
+  font-size: 14px;
+  color: var(--muted);
+  padding: 8px 12px;
+  border-radius: 999px;
+  border:1px solid rgba(255,255,255,.12);
+  background: rgba(0,0,0,.22);
+}
+
+/* slider görünmesin (ama çalışsın) */
+#slider{
+  position: fixed;
+  left: -9999px;
+  top: -9999px;
+}
+
+/* parçacık (kalp/ateş) */
+.p{
+  position:absolute;
+  left: calc(var(--x) * 1%);
+  top: calc(var(--y) * 1%);
+  font-size: var(--s);
+  opacity: 0;
+  transform: translate(-50%,-50%) scale(.9) rotate(var(--r));
+  animation: float 3.8s ease-in-out infinite;
+  animation-delay: var(--d);
+  user-select:none;
+  will-change: transform, opacity;
+}
+
+@keyframes float{
+  0%   { opacity: 0; transform: translate(-50%,-50%) translateY(18px) scale(.85) rotate(var(--r)); }
+  18%  { opacity: .95; }
+  55%  { opacity: .85; }
+  100% { opacity: 0; transform: translate(-50%,-50%) translateY(-26px) scale(1.08) rotate(calc(var(--r) + 12deg)); }
+}
+
+/* modlara göre ton */
+body[data-mode="hearts"] .meter{
+  outline: 1px solid rgba(255,0,130,.25);
+}
+body[data-mode="fire"] .meter{
+  outline: 1px solid rgba(255,140,0,.22);
+}
